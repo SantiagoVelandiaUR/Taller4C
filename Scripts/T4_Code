@@ -1,1 +1,74 @@
-dwad
+* ================== P2.1 con tu Excel ==================
+clear all
+set more off
+
+* 1) Importa y normaliza nombres (todo minúsculas y válidos en Stata)
+import excel "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\juego20252 haciendo econ.xlsx", sheet("Hoja1") firstrow case(lower) clear
+rename, validname
+
+* 2) Ver nombres reales (opcional)
+describe
+
+* 3) Detecta columnas por palabras clave (independiente del formato exacto)
+*    Ajusta si tu describe muestra algo distinto
+local var_period ""
+local var_player ""
+local var_contrib ""
+local var_payoff ""
+
+foreach v of varlist _all {
+    local nm : variable label `v'
+    if ("`nm'"=="") local nm "`v'"
+
+    local low = lower("`v'")
+    if strpos("`low'","round")        & "`var_period'"==""  local var_period `v'
+    if strpos("`low'","team")         & "`var_player'"==""  local var_player `v'
+    if strpos("`low'","contrib")      & "`var_contrib'"=="" local var_contrib `v'
+    if strpos("`low'","pay")          & "`var_payoff'"==""  local var_payoff `v'
+}
+
+* Fallback si no encontró por keywords: toma las 4 primeras columnas
+capture confirm variable `var_period'
+if _rc {
+    ds
+    local c1 : word 1 of `r(varlist)'
+    local c2 : word 2 of `r(varlist)'
+    local c3 : word 3 of `r(varlist)'
+    local c4 : word 4 of `r(varlist)'
+    local var_period  `c1'
+    local var_player  `c2'
+    local var_contrib `c3'
+    local var_payoff  `c4'
+}
+
+* 4) Renombra a nombres limpios que usaremos en el resto del flujo
+rename `var_period'  periodo
+rename `var_player'  jugador
+rename `var_contrib' contribucion
+capture confirm variable `var_payoff'
+if !_rc rename `var_payoff' payoff
+
+* 5) Rellena períodos vacíos y convierte a numéricos
+replace periodo = periodo[_n-1] if missing(periodo)
+destring periodo contribucion, replace force
+
+* 6) Calcula promedio por período
+preserve
+collapse (mean) contribucion, by(periodo)
+
+* 7) Gráfico (todo en una sola línea para evitar errores de ///)
+twoway line contribucion periodo, xtitle("Período (1-10)") ytitle("Contribución promedio") title("Juego propio: contribución promedio por período") xlabel(1(1)10) lwidth(medthick) msymbol(circle)
+
+graph export "p21_linea_propios.png", replace
+restore
+
+* (Opcional) Exporta tabla de promedios
+preserve
+collapse (mean) contribucion, by(periodo)
+export delimited using "p21_promedios_por_periodo.csv", replace
+restore
+* ================== FIN ==================
+
+
+
+
