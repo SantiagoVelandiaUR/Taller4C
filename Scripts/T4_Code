@@ -70,29 +70,27 @@ restore
 
 * ================== P2.2 =================
 *Importamos los datos sin castigo
-import excel using "C:\Users\natal\OneDrive\Documentos\datos herrmann.xlsx", sheet("Sin castigo") cellrange(A2) firstrow clear
-*Calculamos contribucion promedio
+import excel using "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\datos herrmann.xlsx", sheet("Sin castigo") cellrange(A2) firstrow clear
 egen prom_sin = rowmean(Copenhagen-Melbourne)
 keep Period prom_sin
 list
 
 *Importamos datos con castigo
-import excel using "C:\Users\natal\OneDrive\Documentos\datos herrmann.xlsx", sheet("Con castigo") cellrange(A2) firstrow clear
-*Calculamos contribucion promedio
+import excel using "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\datos herrmann.xlsx", sheet("Con castigo") cellrange(A2) firstrow clear
 egen prom_con = rowmean(Copenhagen-Melbourne)
 keep Period prom_con
 list
 
 * Para graficar, repetimos proceso para que sea más fluido. 
 *Cargamos sin castigo
-import excel using "C:\Users\natal\OneDrive\Documentos\datos herrmann.xlsx", sheet("Sin castigo") cellrange(A2) firstrow clear
+import excel using "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\datos herrmann.xlsx", sheet("Sin castigo") cellrange(A2) firstrow clear
 egen prom_sin = rowmean(Copenhagen-Melbourne)
 keep Period prom_sin
 tempfile sin
 save `sin'
 
 *Cargamos con castigo
-import excel using "C:\Users\natal\OneDrive\Documentos\datos herrmann.xlsx", sheet("Con castigo") cellrange(A2) firstrow clear
+import excel using "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\datos herrmann.xlsx", sheet("Con castigo") cellrange(A2) firstrow clear
 egen prom_con = rowmean(Copenhagen-Melbourne)
 keep Period prom_con
 tempfile con
@@ -104,18 +102,20 @@ merge 1:1 Period using `con'
 list
 drop _merge
 
-* Grafico de lineas
-twoway (line prom_sin Period, lcolor(blue) lwidth(medthick)) (line prom_con Period, lcolor(red) lwidth(medthick)), legend(order(1 "Sin castigo" 2 "Con castigo") pos(6) ring(0) cols(1)) xtitle("Período") ytitle("Contribución promedio") title("Contribución promedio por período") xlabel(1(1)10) ylabel(, angle(horizontal))
+* =========================
+* Gráfico de líneas (twoway)
+* =========================
+twoway line prom_sin Period, lcolor(blue) lwidth(medthick) || line prom_con Period, lcolor(red) lwidth(medthick) , legend(order(1 "Sin castigo" 2 "Con castigo") pos(6) ring(0) cols(1)) xtitle("Período") ytitle("Contribución promedio") title("Contribución promedio por período") xlabel(1(1)10) ylabel(, angle(horizontal))
 
 
 *Repetimos proceso para que sea más fluido
-import excel using "C:\Users\natal\OneDrive\Documentos\datos herrmann.xlsx", sheet("Sin castigo") cellrange(A2) firstrow clear
+import excel using "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\datos herrmann.xlsx", sheet("Sin castigo") cellrange(A2) firstrow clear
 egen prom_sin = rowmean(Copenhagen-Melbourne)
 keep Period prom_sin
 tempfile sin
 save `sin'
 
-import excel using "C:\Users\natal\OneDrive\Documentos\datos herrmann.xlsx", sheet("Con castigo") cellrange(A2) firstrow clear
+import excel using "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\datos herrmann.xlsx", sheet("Con castigo") cellrange(A2) firstrow clear
 egen prom_con = rowmean(Copenhagen-Melbourne)
 keep Period prom_con
 tempfile con
@@ -134,15 +134,16 @@ list
 reshape long prom_, i(Period) j(experimento) string
 list
 
-*Grafico de barras
+* =========================
+* Gráfico de barras
+* =========================
 graph bar (mean) prom_, over(experimento) over(Period) blabel(bar, format(%4.1f)) legend(off) ytitle("Contribución promedio") title("Contribución promedio en Períodos 1 y 10")
 
 
 *-----Para facilitar calculos-----*
 *---------------Sin castigo--------------*
-import excel using "C:\Users\natal\OneDrive\Documentos\datos herrmann.xlsx", sheet("Sin castigo") cellrange(A2) firstrow clear
+import excel using "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\datos herrmann.xlsx", sheet("Sin castigo") cellrange(A2) firstrow clear
 keep if Period==1 | Period==10 
-* Renombrar para evitar problemas con reshape
 rename Copenhagen contrib1
 rename Dnipropetrovsk contrib2
 rename Minsk contrib3
@@ -159,13 +160,12 @@ rename Nottingham contrib13
 rename Athens contrib14
 rename Istanbul contrib15
 rename Melbourne contrib16
-* Reshape
 reshape long contrib, i(Period) j(ciudad)
-save "C:\Users\natal\OneDrive\Documentos\sin_castigo_long.dta", replace
+save "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Final\sin_castigo_long.dta", replace
+
 *---------------Con castigo--------------*
-import excel using "C:\Users\natal\OneDrive\Documentos\datos herrmann.xlsx", sheet("Con castigo") cellrange(A2) firstrow clear
+import excel using "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Raw\datos herrmann.xlsx", sheet("Con castigo") cellrange(A2) firstrow clear
 keep if Period==1 | Period==10 
-* Renombrar para evitar problemas con reshape
 rename Copenhagen contrib1
 rename Dnipropetrovsk contrib2
 rename Minsk contrib3
@@ -182,80 +182,62 @@ rename Nottingham contrib13
 rename Athens contrib14
 rename Istanbul contrib15
 rename Melbourne contrib16
-* Reshape
 reshape long contrib, i(Period) j(ciudad)
-save "C:\Users\natal\OneDrive\Documentos\con_castigo_long.dta", replace
+save "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Final\con_castigo_long.dta", replace
 
 *-----Calculo desviacion estandar-----*
 *---------------Sin castigo--------------*
-use "C:\Users\natal\OneDrive\Documentos\sin_castigo_long.dta", clear
+use "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Final\sin_castigo_long.dta", clear
 bysort Period: egen media = mean(contrib)
 bysort Period: egen sd    = sd(contrib)
-*Regla practica
 gen lower = media - 2*sd
 gen upper = media + 2*sd
 gen dentro = contrib >= lower & contrib <= upper
 bysort Period: egen prop_rango = mean(dentro)
 collapse (mean) media sd prop_rango, by(Period)
 gen cumple = cond(prop_rango >= 0.95, "Sí", "No")
-* Mostrar tabla final
 list Period media sd prop_rango cumple
 
 *---------------Con castigo--------------*
-use "C:\Users\natal\OneDrive\Documentos\con_castigo_long.dta", clear
+use "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Final\con_castigo_long.dta", clear
 bysort Period: egen media = mean(contrib)
 bysort Period: egen sd    = sd(contrib)
-*Regla practica
 gen lower = media - 2*sd
 gen upper = media + 2*sd
 gen dentro = contrib >= lower & contrib <= upper
 bysort Period: egen prop_rango = mean(dentro)
 collapse (mean) media sd prop_rango, by(Period)
 gen cumple = cond(prop_rango >= 0.95, "Sí", "No")
-* Mostrar tabla final
 list Period media sd prop_rango cumple
-
 
 *Ahora maximos y minimos
 *Sin castigo
-use "C:\Users\natal\OneDrive\Documentos\sin_castigo_long.dta", clear
+use "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Final\sin_castigo_long.dta", clear
 bysort Period: egen maximo = max(contrib)
 bysort Period: egen minimo = min(contrib)
-
-* Colapsar para que quede tabla resumen
 collapse (min) minimo=contrib (max) maximo=contrib, by(Period)
 list
 
 *Con castigo
-use "C:\Users\natal\OneDrive\Documentos\con_castigo_long.dta", clear
+use "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Final\con_castigo_long.dta", clear
 bysort Period: egen maximo = max(contrib)
 bysort Period: egen minimo = min(contrib)
-
-* Colapsar para que quede tabla resumen
 collapse (min) minimo=contrib (max) maximo=contrib, by(Period)
 list
 
 *Para resumir todos los datos en una solo tabla
 *Sin castigo
-use "C:\Users\natal\OneDrive\Documentos\sin_castigo_long.dta", clear
-* Calcular media, sd, min y max
+use "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Final\sin_castigo_long.dta", clear
 collapse (mean) media=contrib (sd) sd=contrib (min) minimo=contrib (max) maximo=contrib, by(Period)
-* Calcular varianza
 gen varianza = sd^2
-* Calcular rango
-gen rango = maximo - minimo
-* Mostrar la tabla final
+gen rango   = maximo - minimo
 list Period media varianza sd minimo maximo rango, noobs
 
 *Con castigo 
-use "C:\Users\natal\OneDrive\Documentos\con_castigo_long.dta", clear
-* Calcular media, sd, min y max
+use "C:\Users\P e r s o n a l\Downloads\Taller4C-main\Taller4C-main\Data\Final\con_castigo_long.dta", clear
 collapse (mean) media=contrib (sd) sd=contrib (min) minimo=contrib (max) maximo=contrib, by(Period)
-* Calcular varianza
 gen varianza = sd^2
-* Calcular rango
-gen rango = maximo - minimo
-* Mostrar la tabla final
+gen rango   = maximo - minimo
 list Period media varianza sd minimo maximo rango, noobs
 
 ****************************************************
