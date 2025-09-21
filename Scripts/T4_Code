@@ -72,3 +72,86 @@ restore
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+****************************************************
+* P2.3.1 – Simulación de lanzamientos de moneda
+****************************************************
+
+clear all
+set more off
+
+* 12 lanzamientos (6 + 6)
+set obs 12
+gen id = _n
+
+* 0 = sello, 1 = cara
+set seed 12345
+gen moneda = (runiform() < 0.5)
+
+* Bloques: 1 = primeros 6, 2 = segundos 6
+gen grupo = cond(id <= 6, 1, 2)
+
+* Secuencia de lanzamientos
+list id grupo moneda, sepby(grupo)
+
+* Contar caras por bloque (y no perder la secuencia original)
+preserve
+collapse (sum) caras = moneda, by(grupo)
+sort grupo
+list grupo caras
+
+* Extraer conteos y reportar
+scalar c1 = caras[1]
+scalar c2 = caras[2]
+display "Caras en el primer bloque (6 lanzamientos): " c1
+display "Caras en el segundo bloque (6 lanzamientos): " c2
+
+* Comparación automática SIN partir líneas
+if (c1 == c2) {
+    display "Los dos bloques tienen el MISMO número de caras."
+}
+else {
+    display "Los bloques tienen un número de caras DISTINTO."
+}
+restore
+
+
+
+
