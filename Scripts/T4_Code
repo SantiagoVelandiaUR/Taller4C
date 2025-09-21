@@ -247,6 +247,53 @@ ttest contrib, by(tratamiento)
 * Si el p-valor > 0.05  -> no hay diferencia significativa inicial.
 * Si el p-valor <= 0.05 -> sí hay diferencia significativa inicial.
 
+****************************************************
+* P2.3.3 – t-test Periodo 10 (con vs sin castigo)
+****************************************************
 
+clear all
+set more off
+
+* Datos del Periodo 10
+input contrib tratamiento
+* --- SIN CASTIGO ---
+5.2941 0   // Copenhagen
+8.6818 0   // Dnipropetrovs'k
+6.9412 0   // Minsk
+2.9792 0   // St. Gallen
+7.5192 0   // Muscat
+5.5592 0   // Samara
+3.7188 0   // Zurich
+2.9464 0   // Boston
+4.0000 0   // Bonn
+2.4000 0   // Chengdu
+3.8095 0   // Seoul
+5.8750 0   // Riyadh
+2.3929 0   // Nottingham
+5.3636 0   // Athens
+1.3594 0   // Istanbul
+1.3000 0   // Melbourne
+
+* --- CON CASTIGO ---
+17.0147 1   // Copenhagen
+10.0682 1   // Dnipropetrovs'k
+11.7059 1   // Minsk
+15.1563 1   // St. Gallen
+9.0962 1    // Muscat
+11.5724 1   // Samara
+16.4565 1   // Zurich
+16.8393 1   // Boston
+14.6833 1   // Bonn
+14.8125 1   // Chengdu
+17.5119 1   // Seoul
+6.6250 1    // Riyadh
+14.6964 1   // Nottingham
+6.2045 1    // Athens
+7.6250 1    // Istanbul
+15.8500 1   // Melbourne
+end
+
+* t-test
+ttest contrib, by(tratamiento)
 
 
