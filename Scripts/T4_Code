@@ -67,8 +67,6 @@ preserve
 collapse (mean) contribucion, by(periodo)
 export delimited using "p21_promedios_por_periodo.csv", replace
 restore
-* ================== FIN ==================
-
 
 
 
