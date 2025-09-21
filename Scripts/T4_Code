@@ -153,5 +153,100 @@ else {
 restore
 
 
+****************************************************
+* P2.3.2 – t-test Periodo 1 (con vs sin castigo)
+* Datos: Fig. 3 (sin) y Fig. 2A (con) – Periodo 1
+****************************************************
+
+clear all
+set more off
+
+* Cargar datos del Periodo 1 (16 ciudades por tratamiento)
+input contrib tratamiento
+* --- SIN CASTIGO (tratamiento = 0) ---
+* Copenhagen
+14.1029 0
+* Dnipropetrovs'k
+10.9545 0
+* Minsk
+12.7941 0
+* St. Gallen
+13.6875 0
+* Muscat
+9.5385 0
+* Samara
+10.8421 0
+* Zurich
+11.0833 0
+* Boston
+12.9643 0
+* Bonn
+10.8500 0
+* Chengdu
+10.0000 0
+* Seoul
+8.2500 0
+* Riyadh
+7.9583 0
+* Nottingham
+10.9286 0
+* Athens
+8.1364 0
+* Istanbul
+8.9375 0
+* Melbourne
+8.2250 0
+
+* --- CON CASTIGO (tratamiento = 1) ---
+* Copenhagen
+15.4118 1
+* Dnipropetrovs'k
+9.4773 1
+* Minsk
+11.7500 1
+* St. Gallen
+15.0417 1
+* Muscat
+9.2115 1
+* Samara
+10.7632 1
+* Zurich
+13.2283 1
+* Boston
+16.0179 1
+* Bonn
+12.0500 1
+* Chengdu
+9.8958 1
+* Seoul
+9.6905 1
+* Riyadh
+6.1458 1
+* Nottingham
+11.3214 1
+* Athens
+5.8182 1
+* Istanbul
+6.5469 1
+* Melbourne
+7.8500 1
+end
+
+* Etiquetas (opcional)
+label define tto 0 "Sin castigo" 1 "Con castigo"
+label values tratamiento tto
+
+* Verificación rápida
+tab tratamiento
+summarize contrib, detail
+
+* t-test de medias independientes (Periodo 1)
+ttest contrib, by(tratamiento)
+
+* Nota orientativa para tu informe:
+* Si el p-valor > 0.05  -> no hay diferencia significativa inicial.
+* Si el p-valor <= 0.05 -> sí hay diferencia significativa inicial.
+
+
 
 
