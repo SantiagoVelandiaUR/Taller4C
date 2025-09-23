@@ -4,10 +4,6 @@ Taller 4 – Juegos de bienes públicos
 
 Grupo C : Natalia Rodriguez , Santiago José Velandia, Julian Mauricio Romero
 
-Taller 4 – Juegos de bienes públicos
-
-Grupo D: Juan David Vargas, Santiago José Velandia, Esteban Vergara
-
 Este repositorio contiene un ejercicio práctico de análisis de datos experimentales en economía, basado en el juego de bienes públicos con y sin castigo. El objetivo es analizar el papel del azar y el impacto del castigo en la cooperación, utilizando simulaciones, pruebas estadísticas y discusión teórica.
 
 Flujo de trabajo:
